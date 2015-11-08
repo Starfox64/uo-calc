@@ -11,7 +11,7 @@
 !define DESCRIPTION "A simple utility designed to save your brain from doing maths while playing at united Operations."
 !define LICENSE_TXT ".\LICENSE.txt"
 !define INSTALLER_NAME ".\uo-calc_setup_${VERSION}.exe"
-!define MAIN_APP_EXE "uo-calc.exe"
+!define MAIN_APP_EXE "nw.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define REG_ROOT "HKCU"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
@@ -95,7 +95,7 @@ File ".\LICENSE.txt"
 File ".\nw.pak"
 File ".\nwjc.exe"
 File ".\package.json"
-File ".\uo-calc.exe"
+File ".\nw.exe"
 SetOutPath "$INSTDIR\src"
 File ".\src\index.html"
 File ".\src\mortar.html"
@@ -234,27 +234,18 @@ WriteUninstaller "$INSTDIR\uninstall.exe"
 !ifdef REG_START_MENU
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 CreateDirectory "$SMPROGRAMS\$SM_Folder"
-CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
-CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
+CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}" "" "$INSTDIR\src\img\UO_Logo_256.ico" 0
+CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}" "" "$INSTDIR\src\img\UO_Logo_256.ico" 0
 CreateShortCut "$SMPROGRAMS\$SM_Folder\Uninstall ${APP_NAME}.lnk" "$INSTDIR\uninstall.exe"
 
-!ifdef WEB_SITE
-WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
-CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME} Website.lnk" "$INSTDIR\${APP_NAME} website.url"
-!endif
 !insertmacro MUI_STARTMENU_WRITE_END
 !endif
 
 !ifndef REG_START_MENU
 CreateDirectory "$SMPROGRAMS\UO Calculator"
-CreateShortCut "$SMPROGRAMS\UO Calculator\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
-CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
+CreateShortCut "$SMPROGRAMS\UO Calculator\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}" "" "$INSTDIR\src\img\UO_Logo_256.ico" 0
+CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}" "" "$INSTDIR\src\img\UO_Logo_256.ico" 0
 CreateShortCut "$SMPROGRAMS\UO Calculator\Uninstall ${APP_NAME}.lnk" "$INSTDIR\uninstall.exe"
-
-!ifdef WEB_SITE
-WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
-CreateShortCut "$SMPROGRAMS\UO Calculator\${APP_NAME} Website.lnk" "$INSTDIR\${APP_NAME} website.url"
-!endif
 !endif
 
 WriteRegStr ${REG_ROOT} "${REG_APP_PATH}" "" "$INSTDIR\${MAIN_APP_EXE}"
@@ -281,7 +272,7 @@ Delete "$INSTDIR\LICENSE.txt"
 Delete "$INSTDIR\nw.pak"
 Delete "$INSTDIR\nwjc.exe"
 Delete "$INSTDIR\package.json"
-Delete "$INSTDIR\uo-calc.exe"
+Delete "$INSTDIR\nw.exe"
 Delete "$INSTDIR\src\index.html"
 Delete "$INSTDIR\src\mortar.html"
 Delete "$INSTDIR\src\js\bootstrap.min.js"
