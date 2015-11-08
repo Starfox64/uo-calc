@@ -1,0 +1,8 @@
+*
+!.gitignore
+!src/
+!src/*
+!package.json
+!UO_Logo_256.ico
+!LICENSE.txt
+!uo-calc.nsi

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>UO Calculator</title>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./font-awesome/css/font-awesome.min.css">
+
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-static-top" style="-webkit-app-region: drag">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">UO Calculator</span>
+			</div>
+
+			<ul class="nav navbar-nav" style="-webkit-app-region: no-drag">
+				<li><a href="./index.html">Ratio</a></li>
+				<li class="active"><a href="./mortar.html">Mortar</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right" style="-webkit-app-region: no-drag">
+				<li><a onclick="win.minimize()" href="#"><i class="fa fa-minus" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
+				<li><a onclick="win.close()" href="#"><i class="fa fa-close" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="col-md-9 col-md-offset-1">
+			<div class="row">
+				<h2 class="text-center">82mm Mortar Calculator</h2>
+			</div>
+			<div class="row">
+				<div class="col-xs-3">
+					<div id="GunGridGroup" class="form-group">
+						<label class="control-label" for="gunGrid">Gun Grid</label>
+						<input class="form-control text-center" type="text" id="gunGrid" maxlength="12" value="12341234">
+					</div>
+					<div id="TargetGridGroup" class="form-group">
+						<label class="control-label" for="targetGrid">Target Grid</label>
+						<input class="form-control text-center" type="text" id="targetGrid" maxlength="12" value="43214321">
+					</div>
+				</div>
+				<div class="col-xs-2 col-sx-offset-2">
+					<div id="GunAltGroup" class="form-group">
+						<label class="control-label" for="gunAlt">Gun Altitude</label>
+						<input class="form-control text-center" type="text" id="gunAlt" maxlength="5" value="200">
+					</div>
+					<div id="TargetAltGroup" class="form-group">
+						<label class="control-label" for="targetAlt">Trg. Altitude</label>
+						<input class="form-control text-center" type="text" id="targetAlt" maxlength="5" value="100">
+					</div>
+				</div>
+				<div class="col-xs-2 col-sx-offset-2">
+					<div id="ChargeGroup" class="form-group">
+						<label class="control-label text-center" style="width: 100%" for="charge">Charge</label>
+						<select class="form-control" id="charge">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+						</select>
+					</div>
+					<!-- <div id="CalcGroup" class="form-group">
+						<label class="control-label text-center" style="width: 100%" for="charge">Calculate</label>
+						<button class="btn btn-success center-block" id="calculate">Calculate</button>
+					</div> -->
+					<div class="form-group">
+						<label class="control-label text-center" style="width: 100%" for="distance">Distance</label>
+						<input class="form-control text-center" type="text" id="distance" readonly>
+					</div>
+				</div>
+				<div class="col-xs-2 col-sx-offset-2">
+					<div class="form-group">
+						<label class="control-label text-right" style="width: 100%" for="tof">ToF</label>
+						<input class="form-control text-center" type="text" id="tof" readonly>
+					</div>
+					<div class="form-group">
+						<label class="control-label text-right" style="width: 100%" for="tof100">ToF / 100m</label>
+						<input class="form-control text-center" type="text" id="tof100" readonly>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sx-offset-2">
+					<div class="form-group">
+						<label class="control-label text-right" style="width: 100%" for="elevation">Elevation</label>
+						<input class="form-control text-center" type="text" id="elevation" readonly>
+					</div>
+					<div class="form-group">
+						<label class="control-label text-right" style="width: 100%" for="azimuth">Azimuth</label>
+						<input class="form-control text-center" type="text" id="azimuth" readonly>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var gui = require("nw.gui");
+	var fs = require("fs");
+	var win = gui.Window.get();
+
+	var RANGE_TABLE = JSON.parse(fs.readFileSync("./src/js/range-table.json"));
+
+	function parseGrid (grid) {
+		if (!/^\d+$/.test(grid)) {
+			return false;
+		};
+
+		if (grid.length % 2 != 0) {
+			return false;
+		};
+
+		var gridSize = grid.length / 2;
+		var gridX = Number(grid.slice(0, gridSize));
+		var gridY = Number(grid.slice(gridSize));
+
+		return [gridX, gridY, gridSize];
+	};
+
+	function calcWeightedAverage (minDist, curDist, maxDist, minVal, maxVal) {
+		var percentage = (curDist - minDist) / (maxDist - minDist);
+		var interval = maxVal - minVal;
+
+		return minVal + interval * percentage;
+	};
+
+	function calcAzimuth (gunX, gunY, targetX, targetY) {
+		var theta = Math.atan2(targetY - gunY, targetX - gunX);
+		theta = theta - Math.PI / 2; // Orients 0 to North
+
+		var angle = theta * (180 / Math.PI); // rad to deg
+
+		if (angle < 0) { // Forces the angle to be positive
+			angle = angle + 360;
+		};
+
+		var azimuth = angle * (6400 / 360); // deg to mils
+		azimuth = 6400 - azimuth;
+
+		return Math.round(azimuth);
+	};
+
+
+	$(document).ready(function() {
+		$(":input").on("input", function (e) {
+			var gunPos = parseGrid($("#gunGrid").val());
+			var targetPos = parseGrid($("#targetGrid").val());
+			var gunAlt = Number($("#gunAlt").val());
+			var targetAlt = Number($("#targetAlt").val());
+			var charge = Number($("#charge").val());
+			var hasError = false;
+
+			if (!gunPos) {
+				hasError = true;
+				$("#GunGridGroup").addClass("has-error");
+			} else {
+				$("#GunGridGroup").removeClass("has-error");
+			};
+
+			if (!targetPos) {
+				hasError = true;
+				$("#TargetGridGroup").addClass("has-error");
+			} else {
+				$("#TargetGridGroup").removeClass("has-error");
+			};
+
+			if (isNaN(gunAlt)) {
+				hasError = true;
+				$("#GunAltGroup").addClass("has-error");
+			} else {
+				$("#GunAltGroup").removeClass("has-error");
+			};
+
+			if (isNaN(targetAlt)) {
+				hasError = true;
+				$("#TargetAltGroup").addClass("has-error");
+			} else {
+				$("#TargetAltGroup").removeClass("has-error");
+			};
+
+			if (hasError) {
+				return false;
+			};
+
+			var minDist = RANGE_TABLE[charge][0][0];
+			var maxDist = RANGE_TABLE[charge][RANGE_TABLE[charge].length - 1][0];
+
+			if (gunPos[2] > targetPos[2]) {
+				var mult = gunPos[2] - targetPos[2];
+				targetPos[0] = targetPos[0] * Math.pow(10, mult);
+				targetPos[1] = targetPos[1] * Math.pow(10, mult);
+				targetPos[2] = gunPos[2];
+			} else if (targetPos[2] > gunPos[2]) {
+				var mult = targetPos[2] - gunPos[2];
+				gunPos[0] = gunPos[0] * Math.pow(10, mult);
+				gunPos[1] = gunPos[1] * Math.pow(10, mult);
+				gunPos[2] = targetPos[2];
+			};
+
+			var dist = Math.sqrt(Math.pow(gunPos[0] - targetPos[0], 2) + Math.pow(gunPos[1] - targetPos[1], 2));
+			dist = Math.round(dist * (10000 / Math.pow(10, gunPos[2] - 1))); // Scales the dist from map grid to real dist.
+
+			$("#distance").val(String(dist) + "m");
+
+			if (dist < minDist || dist > maxDist) {
+				$("#ChargeGroup").addClass("has-warning");
+				return false;
+			} else {
+				$("#ChargeGroup").removeClass("has-warning");
+			};
+
+			var simData;
+
+			for (var i = RANGE_TABLE[charge].length - 1; i >= 0; i--) {
+				var sim = RANGE_TABLE[charge][i];
+
+				if (dist == sim[0]) {
+					simData = sim;
+					break;
+				} else if (dist > sim[0]) {
+					var nextSim = RANGE_TABLE[charge][i + 1];
+
+					var elevation = Math.round(calcWeightedAverage(sim[0], dist, nextSim[0], sim[1], nextSim[1]));
+					var altDiff = calcWeightedAverage(sim[0], dist, nextSim[0], sim[2], nextSim[2]);
+					var tof100 = Math.round(calcWeightedAverage(sim[0], dist, nextSim[0], sim[3], nextSim[3]) * 10) / 10;
+					var tof = Math.round(calcWeightedAverage(sim[0], dist, nextSim[0], sim[4], nextSim[4]) * 10) / 10;
+
+					simData = [dist, elevation, altDiff, tof100, tof];
+					break;
+				};
+			};
+
+			var altDiff = gunAlt - targetAlt;
+			var elevation = Math.round(simData[1] + simData[2] * (altDiff / 100));
+
+			$("#tof").val(String(simData[4]) + "s");
+			$("#tof100").val(String(simData[3]) + "s");
+			$("#elevation").val(String(elevation) + "₥");
+
+			var azimuth = calcAzimuth(gunPos[0], gunPos[1], targetPos[0], targetPos[1]);
+			$("#azimuth").val(String(azimuth) + "₥");
+		});
+	});
+</script>
+</html>

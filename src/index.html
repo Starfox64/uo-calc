@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>UO Calculator</title>
+	<meta charset="UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./font-awesome/css/font-awesome.min.css">
+
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-static-top" style="-webkit-app-region: drag">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">UO Calculator</span>
+			</div>
+
+			<ul class="nav navbar-nav" style="-webkit-app-region: no-drag">
+				<li class="active"><a href="./index.html">Ratio</a></li>
+				<li><a href="./mortar.html">Mortar</a></li>
+				<!-- <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Separated link</a></li>
+						<li class="divider"></li>
+						<li><a href="#">One more separated link</a></li>
+					</ul>
+				</li> -->
+			</ul>
+			<ul class="nav navbar-nav navbar-right" style="-webkit-app-region: no-drag">
+				<li><a onclick="win.minimize()" href="#"><i class="fa fa-minus" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
+				<li><a onclick="win.close()" href="#"><i class="fa fa-close" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="row">
+				<h2 class="text-center">Ratio Calculator</h2>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<div id="BLUFORGroup" class="form-group">
+						<label class="control-label" for="BLUFOR">BLUFOR</label>
+						<input class="form-control input-lg text-center" type="text" id="BLUFOR" value="3">
+					</div>
+				</div>
+				<div class="col-xs-2 col-xs-offset-3">
+					<div id="PlayersGroup" class="form-group">
+						<label class="control-label text-center" style="width: 100%" for="players">Players</label>
+						<input class="form-control input-lg text-center" type="text" id="players" value="32">
+					</div>
+				</div>
+				<div class="col-xs-2 col-xs-offset-3">
+					<div id="OPFORGroup" class="form-group">
+						<label class="control-label text-right" style="width: 100%" for="OPFOR">OPFOR</label>
+						<input class="form-control input-lg text-center" type="text" id="OPFOR" value="1">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="progress">
+					<div id="BLUFORBar" class="progress-bar progress-bar-primary" style="width: 75%"></div>
+					<div id="OPFORBar" class="progress-bar progress-bar-danger" style="width: 25%"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-2">
+					<h2 id="BLUFORResult" class="text-primary">24</h2>
+				</div>
+				<div class="col-xs-2 col-xs-offset-8">
+					<h2 id="OPFORResult" class="text-danger text-right">8</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var gui = require("nw.gui");
+	var win = gui.Window.get();
+
+	$(document).ready(function() {
+		$(":input").on("input", function (e) {
+			var bluforVal = Number($("#BLUFOR").val());
+			var opforVal = Number($("#OPFOR").val());
+			var playersVal = Number($("#players").val());
+			var hasErrors = false;
+
+			if (isNaN(bluforVal) || bluforVal <= 0) {
+				hasErrors = true;
+				$("#BLUFORGroup").addClass("has-error");
+			} else {
+				$("#BLUFORGroup").removeClass("has-error");
+			};
+
+			if (isNaN(opforVal) || opforVal <= 0) {
+				hasErrors = true;
+				$("#OPFORGroup").addClass("has-error");
+			} else {
+				$("#OPFORGroup").removeClass("has-error");
+			};
+
+			if (isNaN(playersVal) || playersVal <= 0) {
+				hasErrors = true;
+				$("#PlayersGroup").addClass("has-error");
+			} else {
+				$("#PlayersGroup").removeClass("has-error");
+			};
+
+			if (hasErrors) {
+				return false;
+			};
+
+			var totalRatio = bluforVal + opforVal;
+
+			var bluforCount = (playersVal / totalRatio) * bluforVal;
+			var opforCount = (playersVal / totalRatio) * opforVal;
+
+			$("#BLUFORResult").html(String(Math.round(bluforCount * 10) / 10));
+			$("#OPFORResult").html(String(Math.round(opforCount * 10) / 10));
+
+			$("#BLUFORBar").css("width", (bluforCount / playersVal * 100) + "%");
+			$("#OPFORBar").css("width", (100 - bluforCount / playersVal * 100) + "%");
+		});
+	});
+</script>
+</html>
