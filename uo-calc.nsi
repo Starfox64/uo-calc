@@ -7,7 +7,7 @@
 !define APP_NAME "UO Calculator"
 !define COMP_NAME "Starfox64"
 !define VERSION "1.0.0.0"
-!define COPYRIGHT "Starfox64 © 2015"
+!define COPYRIGHT "Starfox64 Â© 2015"
 !define DESCRIPTION "A simple utility designed to save your brain from doing maths while playing at united Operations."
 !define LICENSE_TXT ".\LICENSE.txt"
 !define INSTALLER_NAME ".\uo-calc_setup_${VERSION}.exe"
@@ -251,7 +251,7 @@ CreateShortCut "$SMPROGRAMS\UO Calculator\Uninstall ${APP_NAME}.lnk" "$INSTDIR\u
 WriteRegStr ${REG_ROOT} "${REG_APP_PATH}" "" "$INSTDIR\${MAIN_APP_EXE}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayName" "${APP_NAME}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "UninstallString" "$INSTDIR\uninstall.exe"
-WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayIcon" "$INSTDIR\${MAIN_APP_EXE}"
+WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayIcon" "$INSTDIR\src\img\UO_Logo_256.ico"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayVersion" "${VERSION}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "Publisher" "${COMP_NAME}"
 
