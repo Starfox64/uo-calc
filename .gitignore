@@ -3,6 +3,6 @@
 !src/
 !src/*
 !package.json
-!UO_Logo_256.ico
 !LICENSE.txt
+!README.md
 !uo-calc.nsi

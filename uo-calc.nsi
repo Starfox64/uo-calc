@@ -1,4 +1,4 @@
-############################################################################################
+﻿############################################################################################
 #      NSIS Installation Script created by NSIS Quick Setup Script Generator v1.09.18
 #               Entirely Edited with NullSoft Scriptable Installation System                
 #              by Vlasis K. Barkas aka Red Wine red_wine@freemail.gr Sep 2006               
@@ -8,7 +8,7 @@
 !define COMP_NAME "Starfox64"
 !define VERSION "1.0.0.0"
 !define COPYRIGHT "Starfox64 © 2015"
-!define DESCRIPTION "A simple utility designed to save your brain from doing maths while playing at united Operations."
+!define DESCRIPTION "A simple utility designed to save your brain from doing maths while playing at United Operations."
 !define LICENSE_TXT ".\LICENSE.txt"
 !define INSTALLER_NAME ".\uo-calc_setup_${VERSION}.exe"
 !define MAIN_APP_EXE "nw.exe"
