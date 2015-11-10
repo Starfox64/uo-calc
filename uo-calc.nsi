@@ -87,13 +87,11 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File ".\d3dcompiler_47.dll"
 File ".\icudtl.dat"
 File ".\libEGL.dll"
 File ".\libGLESv2.dll"
 File ".\LICENSE.txt"
 File ".\nw.pak"
-File ".\nwjc.exe"
 File ".\package.json"
 File ".\nw.exe"
 File /r ".\src"
@@ -139,13 +137,11 @@ SectionEnd
 
 Section Uninstall
 ${INSTALL_TYPE}
-Delete "$INSTDIR\d3dcompiler_47.dll"
 Delete "$INSTDIR\icudtl.dat"
 Delete "$INSTDIR\libEGL.dll"
 Delete "$INSTDIR\libGLESv2.dll"
 Delete "$INSTDIR\LICENSE.txt"
 Delete "$INSTDIR\nw.pak"
-Delete "$INSTDIR\nwjc.exe"
 Delete "$INSTDIR\package.json"
 Delete "$INSTDIR\nw.exe"
 
