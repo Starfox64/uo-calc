@@ -26,9 +26,18 @@
 	<div class="container">
 		<div class="col-md-9 col-md-offset-1">
 			<div class="row">
-				<h2 class="text-center">82mm Mortar Calculator</h2>
+				<h2 class="text-center">Mortar Calculator</h2>
 			</div>
 			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="control-label" style="width: 100%" for="mortar">Mortar</label>
+						<select class="form-control" id="mortar">
+							<option>ACE Mk6 82mm</option>
+							<option>3CB M6 60mm</option>
+						</select>
+					</div>
+				</div>
 				<div class="col-xs-3">
 					<div id="GunGridGroup" class="form-group">
 						<label class="control-label" for="gunGrid">Gun Grid</label>
@@ -58,10 +67,6 @@
 							<option value="2">2</option>
 						</select>
 					</div>
-					<!-- <div id="CalcGroup" class="form-group">
-						<label class="control-label text-center" style="width: 100%" for="charge">Calculate</label>
-						<button class="btn btn-success center-block" id="calculate">Calculate</button>
-					</div> -->
 					<div class="form-group">
 						<label class="control-label text-center" style="width: 100%" for="distance">Distance</label>
 						<input class="form-control text-center" type="text" id="distance" readonly>
@@ -90,6 +95,8 @@
 			</div>
 		</div>
 	</div>
+
+	<footer style="color: lightgrey;text-align: center;">Created by <a href="https://github.com/Starfox64/">Starfox64</a></footer>
 </body>
 <script type="text/javascript">
 	var RANGE_TABLE;
@@ -141,7 +148,19 @@
 
 
 	$(document).ready(function() {
+		$("#mortar").on("input", function (e) {
+			var mortar = $("#mortar").val();
+			var charges = RANGE_TABLE[mortar].length;
+
+			$("#charge > option").remove();
+
+			for (var i = 0; i < charges; i++) {
+				$("#charge").append($('<option>', {text: i}));
+			}
+		});
+
 		$(":input").on("input", function (e) {
+			var mortar = $("#mortar").val();
 			var gunPos = parseGrid($("#gunGrid").val());
 			var targetPos = parseGrid($("#targetGrid").val());
 			var gunAlt = Number($("#gunAlt").val());
@@ -181,8 +200,8 @@
 				return false;
 			};
 
-			var minDist = RANGE_TABLE[charge][0][0];
-			var maxDist = RANGE_TABLE[charge][RANGE_TABLE[charge].length - 1][0];
+			var minDist = [charge][0][0];
+			var maxDist = RANGE_TABLE[mortar][charge][RANGE_TABLE[mortar][charge].length - 1][0];
 
 			if (gunPos[2] > targetPos[2]) {
 				var mult = gunPos[2] - targetPos[2];
@@ -210,14 +229,14 @@
 
 			var simData;
 
-			for (var i = RANGE_TABLE[charge].length - 1; i >= 0; i--) {
-				var sim = RANGE_TABLE[charge][i];
+			for (var i = RANGE_TABLE[mortar][charge].length - 1; i >= 0; i--) {
+				var sim = RANGE_TABLE[mortar][charge][i];
 
 				if (dist == sim[0]) {
 					simData = sim;
 					break;
 				} else if (dist > sim[0]) {
-					var nextSim = RANGE_TABLE[charge][i + 1];
+					var nextSim = RANGE_TABLE[mortar][charge][i + 1];
 
 					var elevation = Math.round(calcWeightedAverage(sim[0], dist, nextSim[0], sim[1], nextSim[1]));
 					var altDiff = calcWeightedAverage(sim[0], dist, nextSim[0], sim[2], nextSim[2]);
@@ -231,8 +250,9 @@
 
 			var altDiff = gunAlt - targetAlt;
 			var elevation = Math.round(simData[1] + simData[2] * (altDiff / 100));
+			var tof = Math.round(simData[4] + simData[3] * (altDiff / 100));
 
-			$("#tof").val(String(simData[4]) + "s");
+			$("#tof").val(String(tof) + "s");
 			$("#tof100").val(String(simData[3]) + "s");
 			$("#elevation").val(String(elevation) + "₥");
 
