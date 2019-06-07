@@ -5,37 +5,32 @@
 	<meta charset="UTF-8">
 
 	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="./font-awesome/css/font-awesome.min.css">
 
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+
+	<style media="screen">
+		.text-blufor {color: rgb(0, 76, 153);}
+		.text-civfor {color: rgb(102, 0, 128);}
+		.text-indfor {color: rgb(0, 128, 0);}
+		.text-opfor {color: rgb(128, 0, 0);}
+
+		.bar-blufor {background-color: rgb(0, 76, 153);}
+		.bar-civfor {background-color: rgb(102, 0, 128);}
+		.bar-indfor {background-color: rgb(0, 128, 0);}
+		.bar-opfor {background-color: rgb(128, 0, 0);}
+	</style>
 </head>
 <body>
-	<nav class="navbar navbar-default navbar-static-top" style="-webkit-app-region: drag">
+	<nav class="navbar navbar-default navbar-static-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<span class="navbar-brand">UO Calculator</span>
 			</div>
 
-			<ul class="nav navbar-nav" style="-webkit-app-region: no-drag">
+			<ul class="nav navbar-nav">
 				<li class="active"><a href="./index.html">Ratio</a></li>
 				<li><a href="./mortar.html">Mortar</a></li>
-				<!-- <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Separated link</a></li>
-						<li class="divider"></li>
-						<li><a href="#">One more separated link</a></li>
-					</ul>
-				</li> -->
-			</ul>
-			<ul class="nav navbar-nav navbar-right" style="-webkit-app-region: no-drag">
-				<li><a onclick="win.minimize()" href="#"><i class="fa fa-minus" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
-				<li><a onclick="win.close()" href="#"><i class="fa fa-close" style="font-size: 1.5em;vertical-align: middle;"></i></a></li>
 			</ul>
 		</div>
 	</nav>
@@ -48,59 +43,94 @@
 			<div class="row">
 				<div class="col-xs-2">
 					<div id="BLUFORGroup" class="form-group">
-						<label class="control-label" for="BLUFOR">BLUFOR</label>
-						<input class="form-control input-lg text-center" type="text" id="BLUFOR" value="3">
+						<label class="control-label text-blufor" for="BLUFOR">BLUFOR</label>
+						<input class="form-control input-lg text-center" type="text" id="BLUFOR" value="2">
 					</div>
 				</div>
-				<div class="col-xs-2 col-xs-offset-3">
+				<div class="col-xs-2">
+					<div id="CIVFORGroup" class="form-group">
+						<label class="control-label text-civfor" style="width: 100%" for="CIVFOR">CIVFOR</label>
+						<input class="form-control input-lg text-center" type="text" id="CIVFOR" value="0">
+					</div>
+				</div>
+				<div class="col-xs-2 col-xs-offset-1">
 					<div id="PlayersGroup" class="form-group">
 						<label class="control-label text-center" style="width: 100%" for="players">Players</label>
-						<input class="form-control input-lg text-center" type="text" id="players" value="32">
+						<input class="form-control input-lg text-center" type="text" id="players" value="30">
 					</div>
 				</div>
-				<div class="col-xs-2 col-xs-offset-3">
+				<div class="col-xs-2 col-xs-offset-1">
+					<div id="INDFORGroup" class="form-group">
+						<label class="control-label text-indfor text-right" style="width: 100%" for="INDFOR">INDFOR</label>
+						<input class="form-control input-lg text-center" type="text" id="INDFOR" value="0">
+					</div>
+				</div>
+				<div class="col-xs-2">
 					<div id="OPFORGroup" class="form-group">
-						<label class="control-label text-right" style="width: 100%" for="OPFOR">OPFOR</label>
+						<label class="control-label text-opfor text-right" style="width: 100%" for="OPFOR">OPFOR</label>
 						<input class="form-control input-lg text-center" type="text" id="OPFOR" value="1">
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="progress">
-					<div id="BLUFORBar" class="progress-bar progress-bar-primary" style="width: 75%"></div>
-					<div id="OPFORBar" class="progress-bar progress-bar-danger" style="width: 25%"></div>
+					<div id="BLUFORBar" class="progress-bar bar-blufor" style="width: 66.666%"></div>
+					<div id="CIVFORBar" class="progress-bar bar-civfor" style="width: 0%"></div>
+					<div id="INDFORBar" class="progress-bar bar-indfor" style="width: 0%"></div>
+					<div id="OPFORBar" class="progress-bar bar-opfor" style="width: 33.333%"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-2">
-					<h2 id="BLUFORResult" class="text-primary">24</h2>
+					<h2 id="BLUFORResult" class="text-blufor text-center">20</h2>
 				</div>
-				<div class="col-xs-2 col-xs-offset-8">
-					<h2 id="OPFORResult" class="text-danger text-right">8</h2>
+				<div class="col-xs-2">
+					<h2 id="CIVFORResult" class="text-civfor text-center">0</h2>
+				</div>
+				<div class="col-xs-2 col-xs-offset-4">
+					<h2 id="INDFORResult" class="text-indfor text-center">0</h2>
+				</div>
+				<div class="col-xs-2">
+					<h2 id="OPFORResult" class="text-opfor text-center">10</h2>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<footer style="color: lightgrey;text-align: center;">Created by <a href="https://github.com/Starfox64/">Starfox64</a></footer>
 </body>
 <script type="text/javascript">
-	var gui = require("nw.gui");
-	var win = gui.Window.get();
-
 	$(document).ready(function() {
 		$(":input").on("input", function (e) {
 			var bluforVal = Number($("#BLUFOR").val());
+			var civforVal = Number($("#CIVFOR").val());
+			var indforVal = Number($("#INDFOR").val());
 			var opforVal = Number($("#OPFOR").val());
 			var playersVal = Number($("#players").val());
 			var hasErrors = false;
 
-			if (isNaN(bluforVal) || bluforVal <= 0) {
+			if (isNaN(bluforVal)) {
 				hasErrors = true;
 				$("#BLUFORGroup").addClass("has-error");
 			} else {
 				$("#BLUFORGroup").removeClass("has-error");
 			};
 
-			if (isNaN(opforVal) || opforVal <= 0) {
+			if (isNaN(civforVal)) {
+				hasErrors = true;
+				$("#CIVFORGroup").addClass("has-error");
+			} else {
+				$("#CIVFORGroup").removeClass("has-error");
+			};
+
+			if (isNaN(indforVal)) {
+				hasErrors = true;
+				$("#INDFORGroup").addClass("has-error");
+			} else {
+				$("#INDFORGroup").removeClass("has-error");
+			};
+
+			if (isNaN(opforVal)) {
 				hasErrors = true;
 				$("#OPFORGroup").addClass("has-error");
 			} else {
@@ -118,16 +148,23 @@
 				return false;
 			};
 
-			var totalRatio = bluforVal + opforVal;
+			var totalRatio = bluforVal + civforVal + indforVal + opforVal;
+			var pr = playersVal / totalRatio;
 
-			var bluforCount = (playersVal / totalRatio) * bluforVal;
-			var opforCount = (playersVal / totalRatio) * opforVal;
+			var bluforCount = pr * bluforVal;
+			var civforCount = pr * civforVal;
+			var indforCount = pr * indforVal;
+			var opforCount = pr * opforVal;
 
 			$("#BLUFORResult").html(String(Math.round(bluforCount * 10) / 10));
+			$("#CIVFORResult").html(String(Math.round(civforCount * 10) / 10));
+			$("#INDFORResult").html(String(Math.round(indforCount * 10) / 10));
 			$("#OPFORResult").html(String(Math.round(opforCount * 10) / 10));
 
 			$("#BLUFORBar").css("width", (bluforCount / playersVal * 100) + "%");
-			$("#OPFORBar").css("width", (100 - bluforCount / playersVal * 100) + "%");
+			$("#CIVFORBar").css("width", (civforCount / playersVal * 100) + "%");
+			$("#INDFORBar").css("width", (indforCount / playersVal * 100) + "%");
+			$("#OPFORBar").css("width", (opforCount / playersVal * 100) + "%");
 		});
 	});
 </script>
