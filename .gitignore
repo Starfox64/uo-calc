@@ -1,8 +1,0 @@
-*
-!.gitignore
-!src/
-!src/*
-!package.json
-!LICENSE.txt
-!README.md
-!uo-calc.nsi
